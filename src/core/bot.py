@@ -52,7 +52,7 @@ class Bot:
 
     def start(self):
         self._started_at = int(dt.now().timestamp())
-        log("Bot", "__init__", f"ts: {self._started_at}",
+        log("Bot", "start", f"ts: {self._started_at}",
             dump_time(self._started_at % (24 * 60 * 60)))
 
         self._bot.infinity_polling()
