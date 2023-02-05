@@ -64,11 +64,13 @@ class Bot:
         for plugin in self._plugins:
             plugin.finalize()
 
-    def make_mentions(self, chat_id: int, user_ids: Iterable[int]) -> str:
+    def make_mentions(self,
+                      chat_id: int,
+                      user_ids: Iterable[int]) -> Iterable[str]:
         names = {uid: self._bot.get_chat_member(chat_id, uid).user.full_name
                  for uid in user_ids}
-        return "\n".join(f"[{name}](tg://user?id={uid})"
-                         for uid, name in names.items())
+        return (f"[{name}](tg://user?id={uid})"
+                for uid, name in names.items())
 
     def replies_to(self,
                    phrase: str,
