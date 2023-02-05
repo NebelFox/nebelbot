@@ -6,7 +6,7 @@ from telebot import TeleBot
 from telebot.types import Message, User
 
 from utils import sanitize_name, log, dump_time
-from core import Config, Chat, Help, Assets
+from core import Config, Chat, Help, Assets, plugins
 
 
 class Bot:
@@ -28,6 +28,10 @@ class Bot:
         self._chats = {
             chat_id: Chat.from_dict(chat, self.make_get_member_name(chat_id))
             for chat_id, chat in self._assets[self._chats_asset].items()}
+
+        self._plugins = tuple(
+            plugins[name](self, Config(plugin_config), assets)
+            for name, plugin_config in config.plugins.items())
 
         self._started_at = -1
 
@@ -56,6 +60,9 @@ class Bot:
         self._assets[self._chats_asset] = {
             chat_id: chat.to_dict()
             for chat_id, chat in self._chats.items()}
+
+        for plugin in self._plugins:
+            plugin.finalize()
 
     def make_mentions(self, chat_id: int, user_ids: Iterable[int]) -> str:
         names = {uid: self._bot.get_chat_member(chat_id, uid).user.full_name
