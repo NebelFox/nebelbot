@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from typing import Any, Iterable, Tuple, TextIO, Callable, Dict, Optional, \
-    Literal, Union, NewType
+    Literal, Union
 
 from core.assets.assets import Assets
 
@@ -10,8 +10,8 @@ from core.assets.assets import Assets
 class FileAssets(Assets):
     _loader_function_suffix = '_asset_loader'
 
-    LoaderType = NewType('Loader', Callable[[TextIO], Any])
-    DumperType = NewType('Dumper', Callable[[TextIO, Any], None])
+    LoaderType = Callable[[TextIO], Any]
+    DumperType = Callable[[TextIO, Any], None]
 
     Loaders = Dict[str, LoaderType]
     Dumpers = Dict[str, DumperType]
