@@ -2,7 +2,20 @@ from math import ceil
 
 
 class Help:
-    def __init__(self, header: str = None,
+    """
+    Convenience class for building help messages programmatically
+
+    Splits the content into 2 sections - abilities and examples.
+
+    Abilities section contains the usage and description of each ability.
+    The examples section just lists the added examples.
+
+    The headers of both sections and the top header could be customized
+    via respective constructor parameters.
+    """
+
+    def __init__(self,
+                 header: str = None,
                  abilities_header: str = None,
                  examples_header: str = None):
         self._header = header
@@ -12,12 +25,55 @@ class Help:
         self._examples = []
 
     def add_ability(self, usage: str, description: str):
+        """
+        Add an entry to the abilities section
+
+        :param usage: how to generally invoke the ability
+        :param description: what the ability does
+        """
         self._abilities.append((usage, description))
 
     def add_example(self, example: str):
+        """
+        Add an entry to the examples section
+
+        :param example: arbitrary text, e.g. concrete ability usage
+        """
         self._examples.append(example)
 
-    def make_message(self):
+    def make_message(self) -> str:
+        """
+        Create a help message from the previously added abilities and examples.
+
+        The layout of the message is the following:
+
+        ---
+
+        Top Header
+
+        Abilities Header:
+
+        - `usage1` - description1
+        - `usage2` - description2
+        - ...
+
+        Examples Header:
+
+        - example1
+        - example2
+        - ...
+
+        ---
+
+        If no ability was added - the abilities section is completely skipped
+        including its header. Same with examples.
+
+        The abilities section displays abilities sorted by length ascending.
+        Also, extra spaces are added between usages and descriptions
+        to align the latter and provide more clean view.
+
+        :return: the composed message
+        """
         return "\n\n".join(
             section for section in [
                 self._header,

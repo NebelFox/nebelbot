@@ -1,5 +1,12 @@
+from typing import Dict
+
+
 class Config:
-    def __init__(self, data):
+    """
+    Wraps a dict and allows accessing its content as attributes of this instance
+    """
+
+    def __init__(self, data: Dict):
         self.__data = data
 
     def __getitem__(self, item):
