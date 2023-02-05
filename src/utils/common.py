@@ -1,6 +1,6 @@
 import re
 from datetime import datetime as dt
-from typing import Callable, Sized, Dict
+from typing import Callable, Sized
 import string
 
 
@@ -8,7 +8,7 @@ def init(f: Callable):
     return f()
 
 
-def localed(**locales: Dict[str, Callable]):
+def localed(**locales: Callable):
     def decorator(f):
         def impl(*args, locale: str = next(iter(locales))):
             return locales[locale](*args)
