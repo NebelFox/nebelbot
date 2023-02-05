@@ -8,6 +8,9 @@ from core.assets.assets import Assets
 
 
 class FileAssets(Assets):
+    """
+    Assets that read and write files
+    """
     _loader_function_suffix = '_asset_loader'
 
     LoaderType = Callable[[TextIO], Any]
@@ -29,23 +32,62 @@ class FileAssets(Assets):
         self._dumpers = dict(dumpers or ())
 
     def get(self, key: str) -> Any:
+        """
+        Search for a file with name <key>,
+        and return it's content loaded with the loader for the file extension.
+
+        If there is no loader available for the file extension,
+        an exception is raised.
+
+        If there are multiple files with same name but different extension,
+        an exception is raised.
+
+        :param key: file name, without extension
+        :return: the result of the matched loader execution on file content
+        """
         file, ext = self._open(key, 'loader')
         with file:
             return self._loaders[ext](file)
 
     def set(self, key: str, value: Any):
+        """
+        Search for a file with name <key>,
+        and overwrite it with the dumper for the file extension
+        applied to the <value>
+
+        :param key: file name to overwrite
+        :param value: argument for dumper
+        """
         file, ext = self._open(key, 'dumper')
         with file:
             self._dumpers[ext](file, value)
 
     def loader(self,
                loader: LoaderType) -> LoaderType:
+        """
+        Decorator for adding custom loader function.
+        The file extension this loader is for is inferred
+        from the passed function name by removing the <loader_function_suffix>
+        from the end of it.
+
+        :param loader: a function that reads from a file
+        and deserializes its content
+        """
         return self._decorator('loader',
                                loader,
                                self._loaders,
                                self._loader_function_suffix)
 
     def dumper(self, dumper: DumperType) -> DumperType:
+        """
+        Decorator for adding custom dumper function.
+        The file extension this dumper is for is inferred
+        from the passed function name by removing the <dumper_function_suffix>
+        from the end of it.
+
+        :param dumper: a function that serializes its argument <value>
+        and writes it into passed file
+        """
         return self._decorator('dumper',
                                dumper,
                                self._dumpers,
@@ -112,6 +154,19 @@ class FileAssets(Assets):
 
     def extend(self,
                other: FileAssets):
+        """
+        Combines this FileAssets instance with another instance,
+        using loaders and dumpers from both.
+
+        If both have a loader or dumper for the same extension,
+        an exception is raised.
+
+        The base_dir, loader and dumper function suffixes are taken
+        from this instance, not from the <other>.
+
+        :param other:
+        :return:
+        """
         if common_loaders := set(self._loaders).intersection(other._loaders):
             raise ValueError(f"FileAssets contain conflicting loaders: "
                              f"{', '.join(common_loaders)}")

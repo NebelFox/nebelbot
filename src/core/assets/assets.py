@@ -3,6 +3,10 @@ from abc import ABC, abstractmethod
 
 
 class Assets(ABC):
+    """
+    Base class for getting and setting values by key
+    """
+
     @abstractmethod
     def get(self, key: str) -> Any:
         pass
