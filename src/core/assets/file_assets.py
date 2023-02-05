@@ -144,14 +144,6 @@ class FileAssets(Assets):
             if len(parts) == 2:
                 yield parts[0], parts[1]
 
-    # def narrow(self, path: str) -> FileAssets:
-    #     return FileAssets(
-    #         base_dir=os.path.join(self._base_dir, path),
-    #         loaders=self._loaders,
-    #         loader_function_suffix=self._loader_function_suffix,
-    #         dumpers=self._dumpers,
-    #         dumper_function_suffix=self._dumper_function_suffix)
-
     def extend(self,
                other: FileAssets):
         """
