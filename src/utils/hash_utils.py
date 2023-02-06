@@ -5,7 +5,9 @@ from utils import init
 
 
 def h(x):
-    return abs(isinstance(x, str) and hash(x.lower()) or hash(x))
+    return (abs(isinstance(x, str)
+                and hash(x.lower().strip().replace(' ', ''))
+                or hash(x)))
 
 
 def one(x):
