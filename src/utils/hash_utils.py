@@ -52,7 +52,7 @@ def get_time_delta():
 
         return f
 
-    options = (
+    options = chooser(
         option("зараз"),
         option("нині"),
         option("завтра"),
@@ -65,4 +65,8 @@ def get_time_delta():
         factory("рік", "роки", "років", 64)
     )
 
-    return ref_chooser(options)
+    def impl(x: Any):
+        return options(x)(h(x))
+
+    return impl
+
