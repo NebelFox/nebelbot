@@ -243,7 +243,7 @@ class Bot:
 
         parse_mode = md and "markdown" or None
 
-        def handler(message):
+        def handler(message: Message):
             if response := reply(message):
                 self._bot.reply_to(message, response, parse_mode=parse_mode)
 
